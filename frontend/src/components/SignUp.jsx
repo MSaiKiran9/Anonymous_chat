@@ -97,7 +97,7 @@ toast({
       wrap="wrap"
       gap={3}
     >
-        <Text fontSize='6xl'>Q</Text>
+        <Text fontSize='6xl'>Chat</Text>
       <Input width={"50%"} placeholder="Email" onChange={handleEmailChange} />
       <Input width={"50%"} type="password" placeholder="Password" onChange={handlePassChange} />
       {error && (

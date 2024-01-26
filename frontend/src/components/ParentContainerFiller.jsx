@@ -20,8 +20,7 @@ const ParentContainerFiller = () => {
         Welcome !
       </Heading>
       <Text mb={6}>
-        Play / Create new quizzes
-        and share them with the community!
+        Chat with the community !
       </Text>
 
       <MotionBox
@@ -34,7 +33,7 @@ const ParentContainerFiller = () => {
       <Box>
         <Link to="/home">
           <Button colorScheme="teal" mr={2}>
-            Create/Play Quiz
+            Chat
           </Button>
         </Link>
         <Link to="/profile">
