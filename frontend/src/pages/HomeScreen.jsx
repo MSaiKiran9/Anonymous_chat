@@ -9,13 +9,13 @@ const HomeScreen = () => {
   const [join,setJoin]=useState(false);
   return (
     <>
-    <Box p={4} width="100vw">
+    <Box p={4} w={"100%"}>
       <Heading  as="h1" size="xl">
             Welcome Back , {user.displayName || 'User'}
           </Heading>
       <VStack>
-<Box p={4}>
-<Button colorScheme='teal' onClick={()=>setJoin(!join)}>Join Chat</Button>
+<Box p={4} w={"100%"}>
+<center><Button colorScheme='teal' onClick={()=>setJoin(!join)} m={2}>Join Chat</Button></center>
 {join&&<JoinChat/>}
 </Box>
       </VStack>
