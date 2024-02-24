@@ -1,31 +1,43 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { UserContext } from '../App';
-import { Box, Input, Button, VStack, HStack, Text, Flex } from '@chakra-ui/react';
+import { Box, Input, Button, VStack, HStack, Text, Flex, Spinner } from '@chakra-ui/react';
 import io from 'socket.io-client';
 
 const JoinChat = () => {
   const user = useContext(UserContext);
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
+  const [spin,setSpin]=useState(false);
 
-  // Connect to the server
-  const socket = io('http://localhost:3000'); // Replace with your server URL
+  // Use a ref to store the socket
+  const socketRef = useRef();
 
   useEffect(() => {
-    // Listen for chat messages from server . (curr message of client including)
-    socket.on('chat message', (msg) => {
+    // Connect to the server
+    socketRef.current = io('http://localhost:3000'); // socketio server url !
+
+    // Listen for chat messages from server
+    socketRef.current.on('chat message', (msg) => {
       setChat((chat) => [...chat, msg]);
     });
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-  
+    setSpin(true);
+    // Listen for chat history from server
+    socketRef.current.on('chat history', (messages) => {
+      console.log(messages); // Log the received messages
+      setChat(messages);
+      setSpin(false);
+    });
 
+    return () => {
+      // Disconnect the socket when the component is unmounted
+      socketRef.current.disconnect();
+    };
+  }, []); // Empty dependency array means this effect runs once on mount and clean up on unmount
+  
   // Function to send a chat message
   const sendChat = (event) => {
     event.preventDefault();
-    socket.emit('chat message', { user: user['uid'].slice(0,4), message });   //emit messages to the socketio server ~
+    socketRef.current.emit('chat message', { user: user['uid'].slice(0,4), message });   //emit messages to the socketio server 
     setMessage('');
   };
 
@@ -33,6 +45,7 @@ const JoinChat = () => {
     <Box p={5} border={'2px dashed black'}>
       <VStack spacing={5}>
         <Text fontSize="2xl" color={'blackAlpha.400'} >CHAT</Text>
+        {spin&&<Spinner/>}
         {chat.map((msg, index) => (
           <Flex key={index} w="full" justify={msg.user === user['uid'].slice(0,4) ? 'flex-start' : 'flex-end'}>
             <HStack>
@@ -59,6 +72,7 @@ const JoinChat = () => {
 };
 
 export default JoinChat;
+
 
 
 
